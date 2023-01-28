@@ -1,33 +1,46 @@
--- seeds go brrrr (employee_trk_db.xxxxxx)
-
--- sample insert into from SQL Day 3 office hours for reference
--- INSERT INTO flights (flight_number, start_time, end_time, start_place, end_place) values
--- ('A100', '2022-11-24 18:00', '2022-11-24 19:00', 'EWR', 'CAN'),
--- ('A100', '2022-11-26 18:00', '2022-11-26 19:00', 'CAN', 'EWR');
--- above is an example of an insert many - there are multiple rows being added to flights here.
-
--- same thing but using SET
---INSERT INTO flights SET
---flight_number="A100",
---start_time= 'sometime',
---end_time= 'sometime',
---start_place= 'someplace',
---end_place= 'someplace',;
-
--- update reminder from exercise 10 in module 12 for reference
--- UPDATE books_db.fiction
--- SET name = "Candide" WHERE id = 2;
+-- employee_trk_db seeds
 
 -- departments seed
 
-INSERT INTO employee_trk_db.departments (name) VALUES,
+INSERT INTO employee_trk_db.departments (name) VALUES
 ("Marketing"),
 ("Research and Development"),
 ("Human Resources"),
 ("Loss Prevention"),
-("Maintenance");
+("Maintenance"),
+("Leadership")
+;
 
 -- roles seed
 
+INSERT INTO employee_trk_db.roles (title, salary, department_id) VALUES
+("Elden Lord", 2500000, 6),
+("Manager", 160000, 6),
+("Social Media Specialist", 80000, 1),
+("Advertising Specialist", 90000, 1),
+("HR Representative", 75000, 3),
+("Policy Specialist", 92000, 3),
+("Research Scientist", 120000, 2),
+("Product Technician", 140000, 2),
+("LP Specialist", 80000, 4),
+("Maintenance Engineer", 85000, 5),
+("Facilities Specialist", 70000, 5)
+;
 
 -- employees seed
+
+INSERT INTO employee_trk_db.employees (first_name, last_name, role_id, manager_id) VALUES
+("Godfrey", "the First Elden Lord", 1, 1),
+("Malenia", "Blade of Miquella", 2, 1),
+("Morgott", "the Omen King", 2, 1),
+("Ranni", "the Witch", 2, 1),
+("Patches", "that Guy", 3, 2),
+("Godrick", "the Grafted", 4, 2),
+("Astel", "Naturalborn of the Void", 7, 4),
+("Gideon", "Ofnir", 8, 4),
+("Hoarah", "Loux", 5, 1),
+("Commander", "Nial", 6, 1),
+("Margit", "the Fell Omen", 9, 3),
+("Tree", "Sentinel", 11, 3),
+("Mohg", "the Omen", 10, 3)
+;
