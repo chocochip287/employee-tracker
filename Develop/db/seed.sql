@@ -11,6 +11,9 @@ INSERT INTO employee_trk_db.departments (name) VALUES
 ("Leadership")
 ;
 
+-- display the inserted values
+SELECT * FROM employee_trk_db.departments;
+
 -- roles seed
 
 INSERT INTO employee_trk_db.roles (title, salary, department_id) VALUES
@@ -26,6 +29,9 @@ INSERT INTO employee_trk_db.roles (title, salary, department_id) VALUES
 ("Maintenance Engineer", 85000, 5),
 ("Facilities Specialist", 70000, 5)
 ;
+
+-- display the inserted values
+SELECT * FROM employee_trk_db.roles;
 
 -- employees seed
 
@@ -44,3 +50,6 @@ INSERT INTO employee_trk_db.employees (first_name, last_name, role_id, manager_i
 ("Tree", "Sentinel", 11, 3),
 ("Mohg", "the Omen", 10, 3)
 ;
+
+-- display the inserted values
+SELECT * FROM employee_trk_db.employees;
