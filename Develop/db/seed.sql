@@ -12,7 +12,7 @@ INSERT INTO employee_trk_db.departments (name) VALUES
 ;
 
 -- display the inserted values
-SELECT * FROM employee_trk_db.departments;
+-- SELECT * FROM employee_trk_db.departments;
 
 -- roles seed
 
@@ -31,7 +31,7 @@ INSERT INTO employee_trk_db.roles (title, salary, department_id) VALUES
 ;
 
 -- display the inserted values
-SELECT * FROM employee_trk_db.roles;
+-- SELECT * FROM employee_trk_db.roles;
 
 -- employees seed
 
@@ -52,4 +52,4 @@ INSERT INTO employee_trk_db.employees (first_name, last_name, role_id, manager_i
 ;
 
 -- display the inserted values
-SELECT * FROM employee_trk_db.employees;
+-- SELECT * FROM employee_trk_db.employees;
