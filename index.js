@@ -14,6 +14,8 @@ const connection = require("./Develop/db/connection.js");
 const inquirer = require("inquirer");
 // Imports table package
 const { table } = require("table");
+// Imports queries file
+const queries = require("./Develop/lib/queries.js")
 
 // Function to view all departments
 
@@ -58,7 +60,7 @@ const viewRoles = () => {
 // Function to view all employees
 
 const viewEmployees = () => {
-    return connection.query(`SELECT * FROM employees`, (err, result) => {
+    return connection.query(queries.employeeQuery, (err, result) => {
         // Error statement and a return home in the event of an issue
         if (err) {
             console.error(err);
@@ -68,7 +70,7 @@ const viewEmployees = () => {
         else {
             let prettyResult = result.map( obj => Object.values(obj) );
             // Inserts the table's column headers as the first row in the formatted return
-            prettyResult.unshift(["id", "first_name", "last_name", "role_id", "manager_id"]);
+            prettyResult.unshift(["id", "first_name", "last_name", "title", "department", "salary", "manager"]);
             console.log("\n" + table(prettyResult) + "\n");
             return homeMenu();
         }
@@ -156,7 +158,7 @@ const addRole = () => {
             message: "What is the new role's salary?",
             name: "roleSalary",
             validate: salaryGiven => {
-                if (salaryGiven && typeof salaryGiven === "number") {
+                if (salaryGiven && !isNaN(salaryGiven)) {
                     return true;
                 } else {
                     console.log("\nPlease provide a numeric value for the new role's salary.")
@@ -232,7 +234,7 @@ const addEmployee = () => {
             managerArray = result.map( obj => Object.values(obj) );
             // Formats the query results for use as inquirer choices 
             for(let i = 0; i < managerArray.length; i++) {
-                const manager = managerArray[i][0] + ": " + managerArray[i][1] +  managerArray[i][2];
+                const manager = managerArray[i][0] + ": " + managerArray[i][1] + " " + managerArray[i][2];
                 formattedManagers.push(manager);
             }            
             return
@@ -299,15 +301,79 @@ const addEmployee = () => {
 
 // Function to update an employee role (select employee and role to update)
 
-function updateEmployeeRole() {
-    // gonna need to query a list of employees so that one can be selected. Will probably need two inquirer prompts here - one to select an employee, then another to deal with their role.
-
-    // Employee selection prompt
+const updateEmployeeRole = () => {
+    // Array to hold employee names
+    let employeesArray = [];
+    // Array to hold formatted employee names for inquirer
+    let formattedEmployees = [];
+    // Array to hold roles
+    let rolesArray = [];
+    // Array to hold formatted roles for inquirer
+    let formattedRoles = [];
+    // Query to grab employees and their current roles
+    connection.query(queries.getEmployeesForUpdate, (err, result) => {
+        // Error statement and a return home in the event of an issue
+        if (err) {
+            console.error(err);
+            return homeMenu();
+        } 
+        else {
+            // Plugs employees into an array
+            employeesArray = result.map( obj => Object.values(obj) );
+            // Formats employees for use as inquirer choices 
+            for(let i = 0; i < employeesArray.length; i++) {
+                const employee = employeesArray[i][0] + ": " + employeesArray[i][1];
+                formattedEmployees.push(employee);
+            }
+            // console.log(`\nemployeesArray is ${employeesArray}.\n`);
+            // console.log(`formattedEmployees is ${formattedEmployees}.\n`);
+            return
+        }
+    });
+    // Query to grab the list of current roles
+    connection.query(queries.getRolesForUpdate, (err, result) => {
+        // Error statement and a return home in the event of an issue
+        if (err) {
+            console.error(err);
+            return homeMenu();
+        } 
+        else {
+            // Plugs employees into an array
+            rolesArray = result.map( obj => Object.values(obj) );
+            // Formats employees for use as inquirer choices 
+            for(let i = 0; i < rolesArray.length; i++) {
+                const role = rolesArray[i][0] + ": " + rolesArray[i][1];
+                formattedRoles.push(role);
+            }
+            // console.log(`\nrolesArray is ${rolesArray}.\n`);
+            // console.log(`formattedRoles is ${formattedRoles}.\n`);
+            return
+        }
+    });
+    // Employee and updated role selection prompt
     inquirer.prompt ([
         {
-            type: "list"
+            type: "list",
+            message: "Which employee would you like to update?",
+            choices: formattedEmployees,
+            name: "selectedEmployee"
+        },
+        {
+            type: "list",
+            message: "What role should this employee be assigned to?",
+            choices: formattedRoles,
+            name: "selectedRole"
         }
     ])
+    .then((responses) =>{
+        // isolates employee ID
+        //let employeeID = responses.employeeManager.charAt(0);
+        //let RoleID = responses.employeeRole.charAt(0);
+        console.log(`\nThe selected employee is ${responses.selectedEmployee}.\n`);
+        console.log(`The updated role will be ${responses.selectedRole}.\n`);
+        homeMenu();
+    }
+    )
 }
 
 // Function to end the program and break the connection
@@ -353,7 +419,7 @@ const homeMenu = () => {
                 addEmployee();
                 break;
             case "Update an employee role":
-                console.log("coming soon!");
+                updateEmployeeRole();
                 break;
             default:
                 return console.log("uuuhhh");
