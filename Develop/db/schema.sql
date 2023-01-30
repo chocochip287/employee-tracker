@@ -30,6 +30,6 @@ CREATE TABLE employees (
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     role_id INT NOT NULL,
-    manager_id INT NOT NULL,
+    manager_id INT,
     PRIMARY KEY(id)
 );

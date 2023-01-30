@@ -36,11 +36,11 @@ INSERT INTO employee_trk_db.roles (title, salary, department_id) VALUES
 -- employees seed
 
 INSERT INTO employee_trk_db.employees (first_name, last_name, role_id, manager_id) VALUES
-("Godfrey", "the First Elden Lord", 1, 1),
+("Godfrey", "the First Elden Lord", 1, null),
 ("Malenia", "Blade of Miquella", 2, 1),
 ("Morgott", "the Omen King", 2, 1),
 ("Ranni", "the Witch", 2, 1),
-("Patches", "that Guy", 3, 2),
+("Patches", "that Guy", 3, 2), 
 ("Godrick", "the Grafted", 4, 2),
 ("Astel", "Naturalborn of the Void", 7, 4),
 ("Gideon", "Ofnir", 8, 4),
