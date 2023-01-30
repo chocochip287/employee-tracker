@@ -338,7 +338,7 @@ const updateEmployeeRole = () => {
             return homeMenu();
         } 
         else {
-            // Plugs employees into an array
+            // Plugs roles query results into an array
             rolesArray = result.map( obj => Object.values(obj) );
             // Formats employees for use as inquirer choices 
             for(let i = 0; i < rolesArray.length; i++) {
@@ -373,8 +373,7 @@ const updateEmployeeRole = () => {
         console.log(`The updated role will be ${responses.selectedRole}.\n`);
         homeMenu();
     }
-    )
-}
+)};
 
 // Function to end the program and break the connection
 
