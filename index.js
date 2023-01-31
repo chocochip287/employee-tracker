@@ -276,7 +276,8 @@ const addEmployee = () => {
     ])
     .then((responses) => {
         let employeeManager = responses.employeeManager.charAt(0);
-        let employeeRole = responses.employeeRole.charAt(0);
+        let employeeRoleArray = responses.employeeRole.split(":");
+        let employeeRole = employeeRoleArray[0];
 
         connection.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ("${responses.employeeFirstName}", "${responses.employeeLastName}", ${employeeRole}, ${employeeManager});`,
 
