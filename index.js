@@ -1,8 +1,7 @@
 /*
-1/28/2023
+1/30/2023
 To-do:
-* Finish inquirer prompts and related queries.
-* update viewEmployees with the finalized query from workbench to get the info shown in the video.
+* Complete the functionality to update roles. Struggled here with building the needed promise based/asynchronous querying to achieve the desired output.
 
 Future scoping:
 
@@ -24,7 +23,7 @@ const viewDepartments = () => {
         // Error statement and a return home in the event of an issue
         if (err) {
             console.error(err);
-            return homeMenu();
+            homeMenu();
         } 
         // If all's well, formats the returned objects into an array and uses the table package to format them before returning home
         else {
@@ -32,7 +31,7 @@ const viewDepartments = () => {
             // Inserts the table's column headers as the first row in the formatted return
             prettyResult.unshift(["id", "name"]);
             console.log("\n" + table(prettyResult) + "\n");
-            return homeMenu();
+            homeMenu();
         }
     });
 };
@@ -44,7 +43,7 @@ const viewRoles = () => {
         // Error statement and a return home in the event of an issue
         if (err) {
             console.error(err);
-            return homeMenu();
+            homeMenu();
         } 
         // If all's well, formats the returned objects into an array and uses the table package to format them before returning home
         else {
@@ -52,7 +51,7 @@ const viewRoles = () => {
             // Inserts the table's column headers as the first row in the formatted return
             prettyResult.unshift(["id", "title", "salary", "department_id"]);
             console.log("\n" + table(prettyResult) + "\n");
-            return homeMenu();
+            homeMenu();
         }
     });
 };
@@ -64,7 +63,7 @@ const viewEmployees = () => {
         // Error statement and a return home in the event of an issue
         if (err) {
             console.error(err);
-            return homeMenu();
+            homeMenu();
         } 
         // If all's well, formats the returned objects into an array and uses the table package to format them before returning home
         else {
@@ -72,7 +71,7 @@ const viewEmployees = () => {
             // Inserts the table's column headers as the first row in the formatted return
             prettyResult.unshift(["id", "first_name", "last_name", "title", "department", "salary", "manager"]);
             console.log("\n" + table(prettyResult) + "\n");
-            return homeMenu();
+            homeMenu();
         }
     });
 };
@@ -102,12 +101,10 @@ const addDepartment = () => {
         function (err, result) {
             if (err) {
                 console.error(err);
-                return homeMenu();
+                homeMenu();
             } else {
                 console.log("\nYour department was added successfully.\n");
                 viewDepartments();
-                console.log("\n");
-                return homeMenu();
             }
         });
     });
@@ -125,7 +122,7 @@ const addRole = () => {
         // Error statement and a return home in the event of an issue
         if (err) {
             console.error(err);
-            return homeMenu();
+            homeMenu();
         } 
         // 
         else {
@@ -180,12 +177,10 @@ const addRole = () => {
         function (err, result) {
             if (err) {
                 console.error(err);
-                return homeMenu();
+                homeMenu();
             } else {
                 console.log("\nYour new role was added successfully.\n");
                 viewRoles();
-                console.log("\n");
-                return homeMenu();
             }
         });
     });
@@ -288,12 +283,10 @@ const addEmployee = () => {
         function (err, result) {
             if (err) {
                 console.error(err);
-                return homeMenu();
+                homeMenu();
             } else {
                 console.log("\nYour new employee was added successfully.\n");
                 viewEmployees();
-                console.log("\n");
-                return homeMenu();
             }
         });
     });
@@ -302,78 +295,9 @@ const addEmployee = () => {
 // Function to update an employee role (select employee and role to update)
 
 const updateEmployeeRole = () => {
-    // Array to hold employee names
-    let employeesArray = [];
-    // Array to hold formatted employee names for inquirer
-    let formattedEmployees = [];
-    // Array to hold roles
-    let rolesArray = [];
-    // Array to hold formatted roles for inquirer
-    let formattedRoles = [];
-    // Query to grab employees and their current roles
-    connection.query(queries.getEmployeesForUpdate, (err, result) => {
-        // Error statement and a return home in the event of an issue
-        if (err) {
-            console.error(err);
-            return homeMenu();
-        } 
-        else {
-            // Plugs employees into an array
-            employeesArray = result.map( obj => Object.values(obj) );
-            // Formats employees for use as inquirer choices 
-            for(let i = 0; i < employeesArray.length; i++) {
-                const employee = employeesArray[i][0] + ": " + employeesArray[i][1];
-                formattedEmployees.push(employee);
-            }
-            // console.log(`\nemployeesArray is ${employeesArray}.\n`);
-            // console.log(`formattedEmployees is ${formattedEmployees}.\n`);
-            return
-        }
-    });
-    // Query to grab the list of current roles
-    connection.query(queries.getRolesForUpdate, (err, result) => {
-        // Error statement and a return home in the event of an issue
-        if (err) {
-            console.error(err);
-            return homeMenu();
-        } 
-        else {
-            // Plugs roles query results into an array
-            rolesArray = result.map( obj => Object.values(obj) );
-            // Formats employees for use as inquirer choices 
-            for(let i = 0; i < rolesArray.length; i++) {
-                const role = rolesArray[i][0] + ": " + rolesArray[i][1];
-                formattedRoles.push(role);
-            }
-            // console.log(`\nrolesArray is ${rolesArray}.\n`);
-            // console.log(`formattedRoles is ${formattedRoles}.\n`);
-            return
-        }
-    });
-    // Employee and updated role selection prompt
-    inquirer.prompt ([
-        {
-            type: "list",
-            message: "Which employee would you like to update?",
-            choices: formattedEmployees,
-            name: "selectedEmployee"
-        },
-        {
-            type: "list",
-            message: "What role should this employee be assigned to?",
-            choices: formattedRoles,
-            name: "selectedRole"
-        }
-    ])
-    .then((responses) =>{
-        // isolates employee ID
-        //let employeeID = responses.employeeManager.charAt(0);
-        //let RoleID = responses.employeeRole.charAt(0);
-        console.log(`\nThe selected employee is ${responses.selectedEmployee}.\n`);
-        console.log(`The updated role will be ${responses.selectedRole}.\n`);
-        homeMenu();
-    }
-)};
+    console.log("This is a work in progress. I'm having some struggles with writing up this function in a promise based/asynchronous way so that the expected arrays are getting built out. I will revisit this as soon as I'm able but I want to ensure other camp responsibilities are being addressed.\n");
+    homeMenu();
+}
 
 // Function to end the program and break the connection
 
@@ -386,7 +310,7 @@ function endProgram() {
 
 const homeMenu = () => {
 
-    return inquirer.prompt([
+    inquirer.prompt([
         {
             type: "list",
             message: "What would you like to do?",
@@ -421,7 +345,7 @@ const homeMenu = () => {
                 updateEmployeeRole();
                 break;
             default:
-                return console.log("uuuhhh");
+                return console.log("Something went really wrong.");
         }
     });
 }
