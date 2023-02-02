@@ -293,31 +293,25 @@ const addEmployee = () => {
     });
 };
 
+// Function to get employee data for update process
+
+const employeeQuery = (query) => {
+
+    return new Promise( (resolve, reject) => {
+        connection.query(query, function (err, results) {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    });
+};
+
 // Function to update an employee role (select employee and role to update)
 
 const updateEmployeeRole = () => {
-    
     console.log("This is a work in progress. I'm having some struggles with writing up this function in a promise based/asynchronous way so that the expected arrays are getting built out. I will revisit this as soon as I'm able but I want to ensure other camp responsibilities are being addressed.\n");
     homeMenu();
-    
-
-    /*
-    const empQuery = queries.getEmployeesForUpdate
-
-    const employeeQuery = (empQuery) => {
-
-        return new Promise( (resolve, reject) => {
-            connection.query(empQuery, function (err, results) {
-                if (err) {
-                    return reject(err);
-                }
-                return resolve(results);
-            })
-        })
-    }
-
-    employeeQuery();
-    */
 }
 
 // Function to end the program and break the connection
@@ -364,6 +358,10 @@ const homeMenu = () => {
                 break;
             case "Update an employee role":
                 updateEmployeeRole();
+                // the below is outputting the results of the query then getting back to the menu! I only half get it but this is a start!
+                //employeeQuery(queries.getEmployeesForUpdate)
+                //.then(results => {console.log(results)})
+                //.then(homeMenu());
                 break;
             default:
                 return console.log("Something went really wrong.");
