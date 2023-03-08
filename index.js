@@ -127,12 +127,14 @@ const addRole = () => {
         // 
         else {
             // Plugs the current departments table into an array
+            // returns an array of objects, e.g. { id: 1, name: 'Marketing' }
             deptArray = result.map( obj => Object.values(obj) );
-            // Formats the query results for use as inquirer choices 
+            // Formats the query results into strings for use as inquirer choices
             for(let i = 0; i < deptArray.length; i++) {
                 const department = deptArray[i][0] + ": " + deptArray[i][1];
                 formattedDepts.push(department);
-            }            
+            }
+            console.log(formattedDepts);
             return
         }
     });
@@ -170,7 +172,9 @@ const addRole = () => {
         }
     ])
     .then((responses) => {
-        let chosenDept = responses.roleDeptID.charAt(0);
+        // Takes the value from the left of the colon from the formatted departments list. Written this way to allow for double digit department values to be chosen
+        let thisDept = responses.roleDeptID.split(":")
+        let chosenDept = thisDept[0];
 
         connection.query(`INSERT INTO roles (title, salary, department_id) VALUES ("${responses.roleName}", "${responses.roleSalary}", "${chosenDept}");`,
 

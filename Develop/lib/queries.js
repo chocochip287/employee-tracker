@@ -1,6 +1,6 @@
 // Storing lengthier queries for leaner functions in index.js
 
-// View Employees query
+// View Employees query - the case adds a manager column that sets the manager's name based on the manager_id assigned to the given employee
 const employeeQuery = 
 `select 
 employees.id,
@@ -22,6 +22,7 @@ INNER JOIN employee_trk_db.roles ON employees.role_id = roles.id
 INNER JOIN employee_trk_db.departments ON roles.department_id = departments.id
 ;`
 
+// Selects employees that are not in leadership, indicated by role_id not being equal to 1 or 2
 const getEmployeesForUpdate = 
 `
 SELECT
@@ -33,6 +34,7 @@ FROM employee_trk_db.employees
 WHERE role_id != 1 AND role_id != 2
 ;`
 
+// Selects roles that are not leadership roles, indicated by role_id not being equal to 1 or 2
 const getRolesForUpdate = 
 `
 SELECT
