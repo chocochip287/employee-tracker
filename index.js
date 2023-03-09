@@ -16,6 +16,31 @@ const { table } = require("table");
 // Imports queries file
 const queries = require("./Develop/lib/queries.js")
 
+// Global variables for update role functionality - not presently in use
+// let formattedRoles;
+// let formattedEmployees;
+
+// Functions to format update query results - not presently in use
+/*
+const employeeFormatter = (result) => {
+    employeeArray = result.map( obj => Object.values(obj) );
+    for(let i=0; i< employeeArray.length; i++) {
+        const employee = employeeArray[i][0] + ": " + employeeArray[i][1];
+        formattedEmployees.push(employee);
+    }
+    console.log(formattedEmployees);
+};
+
+const rolesFormatter = (result) => {
+    rolesArray = result.map( obj => Object.values(obj) );
+    for(let i=0; i< rolesArray.length; i++) {
+        const role = rolesArray[i][0] + ": " + rolesArray[i][1];
+        formattedRoles.push(role);
+    }
+    console.log(formattedRoles);
+}
+*/
+
 // Function to view all departments
 
 const viewDepartments = () => {
@@ -80,7 +105,6 @@ const viewEmployees = () => {
 
 const addDepartment = () => {
     // need to use Inquirer to get the name of the department and insert it.
-
     inquirer.prompt([
         {
             type: "input",
@@ -134,7 +158,7 @@ const addRole = () => {
                 const department = deptArray[i][0] + ": " + deptArray[i][1];
                 formattedDepts.push(department);
             }
-            console.log(formattedDepts);
+            // console.log(formattedDepts);
             return
         }
     });
@@ -303,11 +327,11 @@ const addEmployee = () => {
 const employeeQuery = (query) => {
 
     return new Promise( (resolve, reject) => {
-        connection.query(query, function (err, results) {
+        connection.query(query, function (err, result) {
             if (err) {
                 return reject(err);
             }
-            return resolve(results);
+            return resolve(result);
         });
     });
 };
@@ -317,20 +341,99 @@ const employeeQuery = (query) => {
 const rolesQuery = (query) => {
 
     return new Promise( (resolve, reject) => {
-        connection.query(query, function (err, results) {
+        connection.query(query, function (err, result) {
             if (err) {
                 return reject(err);
             }
-            return resolve(results);
+            return resolve(result);
         });
     });
 };
 
 // Function to update an employee role (select employee and role to update)
 
-const updateEmployeeRole = () => {
-    console.log("This is a work in progress. I'm having some struggles with writing up this function in a promise based/asynchronous way so that the expected arrays are getting built out. I will revisit this as soon as I'm able but I want to ensure other camp responsibilities are being addressed.\n");
-    homeMenu();
+const updateEmployeeRole = async () => {
+    // Unformatted employee array
+    let employeeArray = [];
+    // Formatted employee array
+    let formattedEmployees = [];
+    // Unformatted roles array
+    let rolesArray = [];
+    // Formatted roles array
+    let formattedRoles = [];
+    // Async query to get employee info
+    try {
+        const results = await employeeQuery(queries.getEmployeesForUpdate);
+        // Sets the unformatted query results into an array
+        employeeArray = results.map( obj => Object.values(obj) );
+        // Formats the query results for Inquirer
+        for(let i = 0; i < employeeArray.length; i++){
+            const employee = employeeArray[i][0] + ": " + employeeArray[i][1] + ", whose current role is " + employeeArray[i][2];
+            formattedEmployees.push(employee);
+        };
+    }
+    catch(err) {
+        console.log("Something went wrong");
+    };
+    // Async query to get current roles
+    try {
+        const results = await rolesQuery(queries.getRolesForUpdate);
+        // Sets the unformatted query results into an array
+        rolesArray = results.map( obj => Object.values(obj) );
+        // Formats the query results for Inquirer
+        for(let i = 0; i < rolesArray.length; i++){
+            const role = rolesArray[i][0] + ": " + rolesArray[i][1];
+            formattedRoles.push(role);
+        };
+    }
+    catch(err) {
+        console.log("Something went wrong.");
+    };
+    // Inquirer prompt to determine which employee is changing to which role
+   try {
+    await inquirer.prompt([
+        {
+            type: "list",
+            message: "Which employee would you like to update?",
+            choices: formattedEmployees,
+            name: "employee"
+        },
+        {
+            type: "list",
+            message: "What role are we updating this employee to?",
+            choices: formattedRoles,
+            name: "newRole"
+        },
+    ])
+    .then((result) => {
+        // Deconstructs the Inquirer formatted employee name
+        let employeeAsArray = result.employee.split(":");
+        // Isolates the ID value from the formatted name
+        let employeeID = employeeAsArray[0];
+        // Deconstructs the Inquirer formatted role
+        let roleAsArray = result.newRole.split(":");
+        // Isolates the ID value from the formatted role
+        let roleID = roleAsArray[0];
+
+        // Query to update the chosen employee's role to the chosen new role
+        connection.query(`UPDATE employee_trk_db.employees SET role_id = ${roleID} WHERE id = ${employeeID};`),
+        // Something is off here - the query is running correctly but the result message isn't displaying. Tinker with this later - likely an async/await issue on account of the update query being part of the .then rather than using the await callbacks like in the preceding queries.
+        function (err, result) {
+            if (err) {
+                console.error(err);
+                homeMenu();
+            } else {
+                result(console.log(`\n${employeeAsArray[1]}'s role was updated successfully.\n`));
+                viewEmployees();
+            }
+        }
+    });
+   }
+   catch(err) {
+    console.log(err);
+   }
+   console.log("\nThe employee's role was updated successfully.\n");
+   homeMenu();
 }
 
 // Function to end the program and break the connection
@@ -376,11 +479,7 @@ const homeMenu = () => {
                 addEmployee();
                 break;
             case "Update an employee role":
-                // updateEmployeeRole();
-                // the below is outputting the results of the query then getting back to the menu! I only half get it but this is a start!
-                employeeQuery(queries.getEmployeesForUpdate)
-                .then(results => console.log(results))
-                .then(homeMenu());
+                updateEmployeeRole();
                 break;
             default:
                 return console.log("Something went really wrong.");

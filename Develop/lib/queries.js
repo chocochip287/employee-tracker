@@ -27,10 +27,13 @@ INNER JOIN employee_trk_db.departments ON roles.department_id = departments.id
 const getEmployeesForUpdate = 
 `
 SELECT
-id,
-CONCAT(first_name, ' ', last_name) as employee_name
+employees.id,
+CONCAT(employees.first_name, ' ', employees.last_name) as employee_name,
+roles.title
 
 FROM employee_trk_db.employees
+
+LEFT JOIN employee_trk_db.roles on employee_trk_db.employees.role_id = employee_trk_db.roles.id
 
 WHERE role_id != 1 AND role_id != 2
 ;`
@@ -46,15 +49,6 @@ FROM employee_trk_db.roles
 
 WHERE roles.id != 1 AND roles.id != 2
 ;`
-
-const setNewRole =
-`
-UPDATE employee_trk_db.employees
-
-SET role_id = 
-WHERE id = 
-;
-`
 
 module.exports = {
     employeeQuery,
