@@ -279,7 +279,8 @@ const addEmployee = () => {
         }
     ])
     .then((responses) => {
-        let employeeManager = responses.employeeManager.charAt(0);
+        let employeeManagerArray = responses.employeeManager.split(":")
+        let employeeManager = employeeManagerArray[0];
         let employeeRoleArray = responses.employeeRole.split(":");
         let employeeRole = employeeRoleArray[0];
 
@@ -375,11 +376,11 @@ const homeMenu = () => {
                 addEmployee();
                 break;
             case "Update an employee role":
-                updateEmployeeRole();
+                // updateEmployeeRole();
                 // the below is outputting the results of the query then getting back to the menu! I only half get it but this is a start!
-                //employeeQuery(queries.getEmployeesForUpdate)
-                //.then(results => console.log(results))
-                //.then(homeMenu());
+                employeeQuery(queries.getEmployeesForUpdate)
+                .then(results => console.log(results))
+                .then(homeMenu());
                 break;
             default:
                 return console.log("Something went really wrong.");

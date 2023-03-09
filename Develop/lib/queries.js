@@ -14,6 +14,7 @@ CASE
     WHEN manager_id = 2 THEN "Malenia"
     WHEN manager_id = 3 THEN "Morgott"
     WHEN manager_id = 4 THEN "Ranni"
+    WHEN manager_id is NULL THEN ""
 END AS manager
 
 FROM employee_trk_db.employees
