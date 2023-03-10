@@ -1,7 +1,7 @@
 /*
-1/30/2023
+3/10/2023
 To-do:
-* Complete the functionality to update roles. Struggled here with building the needed promise based/asynchronous querying to achieve the desired output.
+* Tinker with the asynchronous functionality in the update code. The update query runs as expected but the flow of the function seems off since the success messge doesn't show within the try segment.
 
 Future scoping:
 
@@ -15,31 +15,6 @@ const inquirer = require("inquirer");
 const { table } = require("table");
 // Imports queries file
 const queries = require("./Develop/lib/queries.js")
-
-// Global variables for update role functionality - not presently in use
-// let formattedRoles;
-// let formattedEmployees;
-
-// Functions to format update query results - not presently in use
-/*
-const employeeFormatter = (result) => {
-    employeeArray = result.map( obj => Object.values(obj) );
-    for(let i=0; i< employeeArray.length; i++) {
-        const employee = employeeArray[i][0] + ": " + employeeArray[i][1];
-        formattedEmployees.push(employee);
-    }
-    console.log(formattedEmployees);
-};
-
-const rolesFormatter = (result) => {
-    rolesArray = result.map( obj => Object.values(obj) );
-    for(let i=0; i< rolesArray.length; i++) {
-        const role = rolesArray[i][0] + ": " + rolesArray[i][1];
-        formattedRoles.push(role);
-    }
-    console.log(formattedRoles);
-}
-*/
 
 // Function to view all departments
 
@@ -64,7 +39,7 @@ const viewDepartments = () => {
 // Function to view all roles
 
 const viewRoles = () => {
-    return connection.query(`SELECT * FROM roles`, (err, result) => {
+    return connection.query(queries.rolesQuery, (err, result) => {
         // Error statement and a return home in the event of an issue
         if (err) {
             console.error(err);
@@ -74,7 +49,7 @@ const viewRoles = () => {
         else {
             let prettyResult = result.map( obj => Object.values(obj) );
             // Inserts the table's column headers as the first row in the formatted return
-            prettyResult.unshift(["id", "title", "salary", "department_id"]);
+            prettyResult.unshift(["id", "title", "salary", "department"]);
             console.log("\n" + table(prettyResult) + "\n");
             homeMenu();
         }

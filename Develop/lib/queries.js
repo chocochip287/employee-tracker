@@ -23,6 +23,21 @@ INNER JOIN employee_trk_db.roles ON employees.role_id = roles.id
 INNER JOIN employee_trk_db.departments ON roles.department_id = departments.id
 ;`
 
+// Query to pull all roles. Pulls department based on roles.department_id
+const rolesQuery = 
+`
+SELECT
+roles.id,
+roles.title,
+roles.salary,
+departments.name
+
+FROM  employee_trk_db.roles
+
+LEFT JOIN employee_trk_db.departments ON roles.department_id = departments.id
+;
+`
+
 // Selects employees that are not in leadership, indicated by role_id not being equal to 1 or 2
 const getEmployeesForUpdate = 
 `
@@ -53,5 +68,6 @@ WHERE roles.id != 1 AND roles.id != 2
 module.exports = {
     employeeQuery,
     getEmployeesForUpdate,
-    getRolesForUpdate
+    getRolesForUpdate,
+    rolesQuery
 }
