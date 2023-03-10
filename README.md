@@ -26,7 +26,7 @@ Once the schema and seed files have been run, type node index from the applicati
 
 All user facing operations for this application can be performed from the user's terminal once the application is running. Each operation is straightforward and prompts the user for any inputs or information required.
 
-Additionally, [this video](https://www.youtube.com/watch?v=Vhu9nH_O0qE) demonstrates all of the application's functionality.
+Additionally, [this video]( https://www.youtube.com/watch?v=3SX50PNxa_8) demonstrates all of the application's functionality.
 
 ## Tests
 
