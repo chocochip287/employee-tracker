@@ -4,6 +4,7 @@ To-do:
 * Tinker with the asynchronous functionality in the update code. The update query runs as expected but the flow of the function seems off since the success messge doesn't show within the try segment.
 
 Future scoping:
+* Expand the update employee function to prompt the user to select what they're looking to update for a given employee rather than having the default and sole function be to update their role. The current functionality is set up as a minimum viable product sort of thing - to demonstrate that it's possible to update the DB via back end, SQL free commands.
 
 */
 
